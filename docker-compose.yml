@@ -1,0 +1,44 @@
+version: "3"
+services:
+  frontend:
+    build:
+      context: ./front
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./front:/app 
+
+  backend:
+    build:
+      context: ./back
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - db
+    volumes:
+      - ./back/uploads/avatars:/uploads/avatars
+
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: your_postgres_username
+      POSTGRES_PASSWORD: your_postgres_password
+      POSTGRES_DB: your_database_name
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 'admin@example.com'
+      PGADMIN_DEFAULT_PASSWORD: 'adminpassword'
+    ports:
+      - "5050:80"
+
+volumes:
+  postgres_data:
+
+
